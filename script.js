@@ -3,10 +3,6 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
-
-///////////////////////////////////////
-
-
 const renderCountry = function (data, className = '') {
     const html = `
 <article class="country ${className}">
@@ -21,8 +17,15 @@ const renderCountry = function (data, className = '') {
     </article>
     `;
     countriesContainer.insertAdjacentHTML('beforeend', html)
-    countriesContainer.style.opacity = 1;
+    // countriesContainer.style.opacity = 1;
 }
+
+const renderError = function(msg) {
+    countriesContainer.insertAdjacentText('beforeend', msg);
+    // countriesContainer.style.opacity = 1;
+}
+///////////////////////////////////////
+
 
 /*
 
@@ -99,6 +102,8 @@ setTimeout(() => {
 //     });
 // };
 
+
+
 //////////////////// SHORT VERSION ////////////////////
 const getCountryData = function(country) {
     // Country 1
@@ -115,9 +120,9 @@ const getCountryData = function(country) {
         return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
     })
     .then(response => response.json())
-    .then(data => {
-        renderCountry(data, 'neighbour');
-/////////////////OPTIONAL 3RD COUNTRY///////////////
+    .then(data =>
+        renderCountry(data, 'neighbour'))
+       /////////////////OPTIONAL 3RD COUNTRY///////////////
     //     const neighbour = data.borders?.[0]
 
     //     if (!neighbour) return;
@@ -127,11 +132,21 @@ const getCountryData = function(country) {
     //   })
     //   .then(response => response.json())
     //   .then(data => renderCountry(data, 'neighbour'))
+    .catch(err => {
+        console.log(`${err} 💥💥💥`);
+        renderError(`Something went wrong 💥💥 ${err.message}. Try again!`)
+    })
+    .finally(() => {
+        countriesContainer.style.opacity = 1;
+    })
+};
+
+btn.addEventListener('click', function() {
+    getCountryData('china');
 });
-}
 
+// getCountryData('dsfsdfdsf')
 
-getCountryData('china');
 
 // const timer = function() {
 //     setTimeout(() => {
