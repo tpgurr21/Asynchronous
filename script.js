@@ -3,7 +3,9 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+
 ///////////////////////////////////////
+
 
 const renderCountry = function (data, className = '') {
     const html = `
@@ -21,6 +23,8 @@ const renderCountry = function (data, className = '') {
     countriesContainer.insertAdjacentHTML('beforeend', html)
     countriesContainer.style.opacity = 1;
 }
+
+/*
 
 const getCountryAndNeighbour = function(country) {
 
@@ -60,6 +64,8 @@ const getCountryAndNeighbour = function(country) {
 // getCountryData('spain');
 getCountryAndNeighbour('monaco');
 
+////// Welcome to Callback Hell
+
 setTimeout(() => {
     console.log('1 second passed');
     setTimeout(() => {
@@ -72,3 +78,37 @@ setTimeout(() => {
         }, 1000)
     }, 1000)
 }, 1000)
+*/
+
+// const request = new XMLHttpRequest();
+//     request.open('GET', `https://countries-api-836d.onrender.com/countries/name/${country}`);
+//     request.send();
+
+// const request = fetch('https://countries-api-836d.onrender.com/countries/name/portugal')
+// console.log(request);
+
+//////////////////// LONG VERSION ////////////////////
+// const getCountryData = function(country) {
+//     fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`).then(function(response) {
+//         console.log(response);
+//         return response.json();
+//     })
+//     .then(function (data) {
+//         console.log(data)
+//         renderCountry(data[0])
+//     });
+// };
+
+//////////////////// SHORT VERSION ////////////////////
+const getCountryData = function(country) {
+    fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`).then((response) => response.json())
+    .then((data) => renderCountry(data[0]));
+};
+
+
+getCountryData('usa');
+
+const timer = function() {
+    setTimeout(() => {
+    console.log('1 second passed')}
+    , 1000);}
