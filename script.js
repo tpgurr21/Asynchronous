@@ -5,9 +5,9 @@ const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
 
-const renderCountry = function (data) {
+const renderCountry = function (data, className = '') {
     const html = `
-<article class="country">
+<article class="country ${className}">
       <img class="country__img" src="${data.flag}" />
       <div class="country__data">
         <h3 class="country__name">${data.name}</h3>
@@ -22,7 +22,7 @@ const renderCountry = function (data) {
     countriesContainer.style.opacity = 1;
 }
 
-const getCountryAndNeighbor = function(country) {
+const getCountryAndNeighbour = function(country) {
 
     // AJAX call country 1
     const request = new XMLHttpRequest();
@@ -37,23 +37,38 @@ const getCountryAndNeighbor = function(country) {
         // Render country 1
         renderCountry(data);
 
-        // Get neighbor country (2)
-        const neighbor = data.borders?.[0]
+        // Get neighbour country (2)
+        const neighbour = data.borders?.[0]
 
-        if(!neighbor) return;
+        if(!neighbour) return;
 
         // AJAX call country 1
     const request2 = new XMLHttpRequest();
-    request2.open('GET', `https://countries-api-836d.onrender.com/countries/alpha/${neighbor}`);
+    request2.open('GET', `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
     request2.send();
 
     request2.addEventListener('load', function() {
         const data2 = JSON.parse(this.responseText)
-    });
+        console.log(data2);
+
+        renderCountry(data2, 'neighbour');
+        });
     });
 };
 // getCountryData('portugal');
 // getCountryData('usa');
 // getCountryData('spain');
-getCountryAndNeighbor('china');
+getCountryAndNeighbour('monaco');
 
+setTimeout(() => {
+    console.log('1 second passed');
+    setTimeout(() => {
+        console.log('2 second passed');
+            setTimeout(() => {
+            console.log('3 second passed');
+                setTimeout(() => {
+                console.log('4 second passed');
+            }, 1000)
+        }, 1000)
+    }, 1000)
+}, 1000)
