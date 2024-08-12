@@ -46,7 +46,7 @@ const getCountryAndNeighbour = function(country) {
 
         if(!neighbour) return;
 
-        // AJAX call country 1
+        // AJAX call country 2
     const request2 = new XMLHttpRequest();
     request2.open('GET', `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
     request2.send();
@@ -101,14 +101,39 @@ setTimeout(() => {
 
 //////////////////// SHORT VERSION ////////////////////
 const getCountryData = function(country) {
-    fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`).then((response) => response.json())
-    .then((data) => renderCountry(data[0]));
-};
+    // Country 1
+    fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+        renderCountry(data[0]);
+        const neighbour = data[0].borders?.[0]
+        // console.log(data);
+
+        if (!neighbour) return;
+
+        // Country 2
+        return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderCountry(data, 'neighbour');
+/////////////////OPTIONAL 3RD COUNTRY///////////////
+    //     const neighbour = data.borders?.[0]
+
+    //     if (!neighbour) return;
+
+    //     // Country 3
+    //     return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+    //   })
+    //   .then(response => response.json())
+    //   .then(data => renderCountry(data, 'neighbour'))
+});
+}
 
 
-getCountryData('usa');
+getCountryData('china');
 
-const timer = function() {
-    setTimeout(() => {
-    console.log('1 second passed')}
-    , 1000);}
+// const timer = function() {
+//     setTimeout(() => {
+//     console.log('1 second passed')}
+//     , 1000);}
