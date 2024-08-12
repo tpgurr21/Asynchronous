@@ -102,36 +102,78 @@ setTimeout(() => {
 //     });
 // };
 
+const getJSON = function(url, errorMsg = 'Something went wrong') {
+    return fetch(url).then(response => {
 
+        if(!response.ok) throw new Error(`${errorMsg} (${response.status})`);
 
-//////////////////// SHORT VERSION ////////////////////
+        return response.json();
+    });
+};
+
+//// Before refactored error message ////
+//////////////////// SHORT VERSION OF GETCOUNTRYDATA ////////////////////
+// const getCountryData = function(country) {
+//     // Country 1
+//     fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
+//     .then(response => {
+//         console.log(response);
+
+//         if(!response.ok)
+//             throw new Error(`Country not found (${response.status})`)
+
+//         return response.json();
+//     })
+//     .then(data => {
+//         renderCountry(data[0]);
+//         // const neighbour = data[0].borders?.[0]
+//         const neighbour = 'dfsfdsdf';
+//         // console.log(data);
+
+//         if (!neighbour) return;
+
+//         // Country 2
+//         return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+//     })
+//     .then(response => {
+//         if(!response.ok)
+//             throw new Error(`Country not found (${response.status})`)
+//         return response.json()})
+//     .then(data =>
+//         renderCountry(data, 'neighbour'))
+//        /////////////////OPTIONAL 3RD COUNTRY///////////////
+//     //     const neighbour = data.borders?.[0]
+
+//     //     if (!neighbour) return;
+
+//     //     // Country 3
+//     //     return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+//     //   })
+//     //   .then(response => response.json())
+//     //   .then(data => renderCountry(data, 'neighbour'))
+//     .catch(err => {
+//         console.log(`${err} 💥💥💥`);
+//         renderError(`Something went wrong 💥💥 ${err.message}. Try again!`)
+//     })
+//     .finally(() => {
+//         countriesContainer.style.opacity = 1;
+//     })
+// };
+
 const getCountryData = function(country) {
     // Country 1
-    fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
-    .then(response => response.json())
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/${country}`, 'Country not found')
     .then(data => {
         renderCountry(data[0]);
         const neighbour = data[0].borders?.[0]
         // console.log(data);
 
-        if (!neighbour) return;
+        if (!neighbour) throw new Error('No neighbour found');
 
         // Country 2
-        return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+        return getJSON(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`, 'Country not found');
     })
-    .then(response => response.json())
-    .then(data =>
-        renderCountry(data, 'neighbour'))
-       /////////////////OPTIONAL 3RD COUNTRY///////////////
-    //     const neighbour = data.borders?.[0]
-
-    //     if (!neighbour) return;
-
-    //     // Country 3
-    //     return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
-    //   })
-    //   .then(response => response.json())
-    //   .then(data => renderCountry(data, 'neighbour'))
+    .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
         console.log(`${err} 💥💥💥`);
         renderError(`Something went wrong 💥💥 ${err.message}. Try again!`)
@@ -145,7 +187,7 @@ btn.addEventListener('click', function() {
     getCountryData('china');
 });
 
-// getCountryData('dsfsdfdsf')
+getCountryData('australia')
 
 
 // const timer = function() {
