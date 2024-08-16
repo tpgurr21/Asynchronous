@@ -17,7 +17,7 @@ const renderCountry = function (data, className = '') {
     </article>
     `;
     countriesContainer.insertAdjacentHTML('beforeend', html) 
-    // countriesContainer.style.opacity = 1;
+    countriesContainer.style.opacity = 1;
 }
 
 const renderError = function(msg) {
@@ -307,7 +307,8 @@ Promise.reject(new Error('Problem!')).catch(x => console.log(x));
 
 
 
-
+///////////////////////////////////
+// Promisifying the Geolocation API
 
 const getPosition = function() {
     return new Promise(function(resolve, reject) {
@@ -369,7 +370,7 @@ btn.addEventListener('click', whereAmI())
 //     return this.data.state
 // }}
 
-*/
+
 const imgContainer = document.querySelector('.images')
 
 const wait = function(seconds) {
@@ -431,3 +432,52 @@ const lotteryPromise = new Promise(function(resolve, reject){
     }
     }, 2000)
 });
+
+*/
+
+const getPosition = function() {
+    return new Promise(function(resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+};
+
+
+
+const whereAmI = async function() {
+    try {// Geolocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng} = pos.coords;
+
+    // Reverse geocoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if(!resGeo.ok) throw new Error('Problem getting location data')
+    const dataGeo = await resGeo.json()
+    console.log(dataGeo);
+
+    // Country data
+    ////// This is the same thing, and is happening in the background as below
+    // fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`).then(res => console.log(res));
+
+   const res = await fetch(`https://countries-api-836d.onrender.com/countries/name/${dataGeo.country}`);
+   if(!res.ok) throw new Error('Problem getting country')
+   const data = await res.json()
+   console.log(data);   
+   renderCountry(data[0]);
+}       catch(err) {
+    console.log(`${err} 💥`);
+    renderError(`💥 ${err.message}`);
+   } 
+}
+whereAmI();
+whereAmI();
+whereAmI();
+whereAmI();
+console.log('FIRST')
+
+// try {
+//     let y = 1;
+//     const x = 2;
+//     x = 3;
+// } catch(err) {
+//     alert(err.message)
+// }
