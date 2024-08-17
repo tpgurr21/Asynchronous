@@ -499,7 +499,6 @@ console.log('1: Will get location');
     console.log('3: Finished getting location')
 })();
 
-*/
 
 const get3Countries = async function(c1, c2, c3) {
     try {
@@ -519,3 +518,44 @@ const get3Countries = async function(c1, c2, c3) {
     }
 };
 get3Countries('portugal', 'canada', 'tanzania');
+
+*/
+
+// Promise.race
+(async function() {
+    const res = await Promise.race([
+        getJSON(`https://countries-api-836d.onrender.com/countries/name/italy`),
+        getJSON(`https://countries-api-836d.onrender.com/countries/name/egypt`),
+        getJSON(`https://countries-api-836d.onrender.com/countries/name/mexico`)
+    ]);
+    console.log(res[0])
+})();
+
+const timeout = function(sec) {
+    return new Promise(function(_, reject) {
+        setTimeout(function() {
+            reject(new Error('request took too long!'))
+        }, sec * 1000)
+    });
+};
+
+Promise.race([
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/tanzania`),
+    timeout(0.3)
+])
+.then(res => console.log(res[0]))
+.catch(err => console.log(err));
+
+// Promise.allSettled
+Promise.allSettled([
+    Promise.resolve('Success'),
+    Promise.reject('ERROR'),
+    Promise.resolve('Another Success')
+]).then(res => console.log(res));
+
+// Promise.any [ES2021]
+Promise.any([
+    Promise.reject('ERROR'),
+    Promise.resolve('Success'),
+    Promise.resolve('Another Success')
+]).then(res => console.log(res));
